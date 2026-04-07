@@ -1,8 +1,7 @@
 # Virtual Cosmos — Multiplayer Canvas Demo
 
-[![Version](https://img.shields.io/badge/version-0.0.0-blue.svg)](./package.json)
 
-A small multiplayer demo built with React + Pixi.js and Socket.IO. Users enter a name, move a player avatar on a shared canvas, and chat with nearby players in real time.
+A small multiplayer demo built with React + Pixi.js and Socket.IO. Users enter a name, move a player avatar on a shared canvas, and chat with nearby players in real time. Here is the link to [backend](https://github.com/kabir-afk/Tutedude-assignment-backend) repository.
 
 **Why this project is useful**
 
