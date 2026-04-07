@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import Game from "./components/Game";
 import { connectWs } from "./ws";
 import { axiosInstance } from "../axiosInstance";
+import { useStore } from "./store";
 
 function App() {
   const socket = useRef(null);
-  const [name, setName] = useState(null);
   const [input, setInput] = useState("");
+  const isLoggedin = useStore((state) => state.isLoggedin);
+  const login = useStore((state) => state.login);
+  const logout = useStore((state) => state.logout);
 
   useEffect(() => {
     socket.current = connectWs();
@@ -16,12 +19,11 @@ function App() {
     const res = await axiosInstance.post("/users", {
       username: input,
     });
-    setName(input);
-    console.log(res.data);
+    login(res.data);
   }
   return (
     <div className="">
-      {!name ? (
+      {!isLoggedin ? (
         <div>
           <form onSubmit={(e) => handleSubmit(e)}>
             <label htmlFor="username">Enter your name</label>
@@ -37,7 +39,10 @@ function App() {
           </form>
         </div>
       ) : (
-        <Game />
+        <div>
+          <Game />
+          <button onClick={() => logout()}>Exit</button>
+        </div>
       )}
     </div>
   );
