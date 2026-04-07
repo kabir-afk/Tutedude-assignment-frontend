@@ -1,15 +1,20 @@
-import { useTick } from "@pixi/react";
-import { useCallback, useEffect, useRef } from "react";
+import { useTick, extend } from "@pixi/react";
+import { useCallback, useEffect, useRef, useMemo } from "react";
+import { TextStyle, Text, Container, Graphics } from "pixi.js";
+import { useStore } from "../store";
+
+extend({ Text, Container, Graphics });
 
 const SPEED = 4;
-const RADIUS = 24;
+const RADIUS = 35;
 const WIDTH = 800;
 const HEIGHT = 600;
 
 export function Circle() {
+  const user = useStore((state) => state.user);
   const pos = useRef({ x: WIDTH / 2, y: HEIGHT / 2 });
   const keys = useRef({});
-  const gfxRef = useRef(null);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const onDown = (e) => {
@@ -30,8 +35,7 @@ export function Circle() {
     g.clear();
     g.circle(0, 0, RADIUS);
     g.fill({ color: 0x6c63ff });
-    g.circle(0, 0, RADIUS);
-    g.stroke({ color: "white", width: 10 });
+    g.stroke({ color: "blue", width: 10 });
   }, []);
 
   useTick(() => {
@@ -48,11 +52,29 @@ export function Circle() {
 
     pos.current = { x, y };
 
-    if (gfxRef.current) {
-      gfxRef.current.x = x;
-      gfxRef.current.y = y;
+    if (containerRef.current) {
+      containerRef.current.x = x;
+      containerRef.current.y = y;
     }
   });
 
-  return <pixiGraphics ref={gfxRef} draw={draw} x={WIDTH / 2} y={HEIGHT / 2} />;
+  // useMemo prevents creating a new style object on every tick
+  const textStyle = useMemo(
+    () =>
+      new TextStyle({
+        align: "center",
+        fontFamily: "Arial",
+        fontSize: 15,
+        fontWeight: "bold",
+        fill: "#ffffff",
+      }),
+    [],
+  );
+
+  return (
+    <pixiContainer ref={containerRef} x={WIDTH / 2} y={HEIGHT / 2}>
+      <pixiGraphics draw={draw} />
+      <pixiText text={user?.name} anchor={0.5} style={textStyle} />
+    </pixiContainer>
+  );
 }
