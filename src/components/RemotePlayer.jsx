@@ -1,4 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
+import { Container, Graphics, Text } from "pixi.js";
+import { extend } from "@pixi/react";
+
+extend({ Container, Graphics, Text });
 
 export function RemotePlayer({ x, y, name }) {
   const containerRef = useRef(null);
