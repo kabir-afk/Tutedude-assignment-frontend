@@ -12,4 +12,7 @@ export const useStore = create((set) => ({
     localStorage.removeItem("user");
     set(() => ({ isLoggedin: false }));
   },
+
+  socket: null,
+  setSocket: (socketInstance) => set({ socket: socketInstance }),
 }));
