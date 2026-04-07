@@ -1,19 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Game from "./components/Game";
 import { connectWs } from "./ws";
 import { axiosInstance } from "../axiosInstance";
 import { useStore } from "./store";
 
 function App() {
-  const socket = useRef(null);
   const [input, setInput] = useState("");
   const isLoggedin = useStore((state) => state.isLoggedin);
+  const user = useStore((state) => state.user);
   const login = useStore((state) => state.login);
   const logout = useStore((state) => state.logout);
+  const setSocket = useStore((state) => state.setSocket);
 
   useEffect(() => {
-    socket.current = connectWs();
-  }, []);
+    if (!user) return;
+
+    const socketInstance = connectWs(user.userId);
+    setSocket(socketInstance);
+  }, [user, setSocket]);
   async function handleSubmit(e) {
     e.preventDefault();
     const res = await axiosInstance.post("/users", {
